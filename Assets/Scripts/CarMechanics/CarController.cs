@@ -10,10 +10,23 @@ public class CarController : NetworkBehaviour
 
     private float currentSteerAngle;
     private float currentMotorTorque;
+    
+    private bool isRaceStart;
+
+    public override void OnNetworkSpawn()
+    {
+        RaceManager.Instance.OnRaceStartBool += OnRaceStateChanged;
+    }
+
+    private void OnRaceStateChanged(bool isRacing)
+    {
+        isRaceStart = isRacing;
+    }
 
     void FixedUpdate()
     {
         if (!IsOwner) return;
+        if(!isRaceStart) return;
         
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");

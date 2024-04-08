@@ -12,6 +12,7 @@ public class DriftCamera : MonoBehaviour
         public KeyCode switchViewKey = KeyCode.C;
     }
 
+    public int targetFrameRate = 120;
     public float smoothing = 6f;
     public Transform lookAtTarget;
     public Transform positionTarget;
@@ -22,7 +23,7 @@ public class DriftCamera : MonoBehaviour
 
     private void Start()
     {
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = targetFrameRate;
     }
 
     private void FixedUpdate ()
@@ -48,15 +49,10 @@ public class DriftCamera : MonoBehaviour
 
     private void UpdateCamera ()
     {
-        if (m_ShowingSideView)
-        {
-            transform.position = sideView.position;
-            transform.rotation = sideView.rotation;
-        }
-        else
-        {
-            transform.position = Vector3.Lerp(transform.position, positionTarget.position, Time.deltaTime * smoothing);
-            transform.LookAt(lookAtTarget);
-        }
+        if (lookAtTarget == null)
+            return;
+        
+        transform.position = Vector3.Lerp(transform.position, positionTarget.position, Time.deltaTime * smoothing);
+        transform.LookAt(lookAtTarget);
     }
 }

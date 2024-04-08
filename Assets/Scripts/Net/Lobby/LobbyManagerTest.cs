@@ -7,7 +7,7 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
-public class LobbyManager : MonoBehaviour
+public class LobbyManagerTest : MonoBehaviour
 {
    private Lobby hostLobby,joinedLobby;
    private float heartbeatTimer,lobbyUpdateTimer;
