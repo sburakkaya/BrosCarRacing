@@ -67,14 +67,14 @@ public class LobbyUI : NetworkBehaviour {
 
         Hide();
     }
-
+    
     private void LobbyManager_OnGameStarted(object sender, EventArgs e)
     {
-        Hide();
-        if (!IsHost)
+        //Hide();
+        /*if (!IsHost)
         {
-            SceneManager.LoadScene(1);
-        }
+            //SceneManager.LoadScene(1);
+        }*/
     }
 
     private void LobbyManager_OnLeftLobby(object sender, System.EventArgs e) {
@@ -106,8 +106,8 @@ public class LobbyUI : NetworkBehaviour {
             lobbyPlayerSingleUI.UpdatePlayer(player);
         }
 
-        changeGameModeButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
-
+        //changeGameModeButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
+        startGameModeButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost() /*&& lobby.Players.Count > 1*/);
         lobbyNameText.text = lobby.Name;
         playerCountText.text = lobby.Players.Count + "/" + lobby.MaxPlayers;
         gameModeText.text = lobby.Data[LobbyManager.KEY_GAME_MODE].Value;

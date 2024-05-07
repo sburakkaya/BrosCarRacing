@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -7,6 +6,7 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class LobbyManager : MonoBehaviour {
 
@@ -17,6 +17,7 @@ public class LobbyManager : MonoBehaviour {
     public const string KEY_PLAYER_NAME = "PlayerName";
     public const string KEY_PLAYER_CHARACTER = "Character";
     public const string KEY_GAME_MODE = "GameMode";
+    public const string KEY_GAME_MAP = "RaceTrack";
     public const string KEY_START_GAME = "Start";
 
 
@@ -43,6 +44,10 @@ public class LobbyManager : MonoBehaviour {
         CaptureTheFlag,
         Conquest
     }
+    
+    public enum GameMap {
+        RaceTrack,
+    }
 
     public enum PlayerCharacter {
         Marine,
@@ -61,6 +66,7 @@ public class LobbyManager : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
+        UpdatePlayerName(PlayerPrefs.GetString("playername"));
     }
 
     private void Update() {
@@ -139,8 +145,10 @@ public class LobbyManager : MonoBehaviour {
                     }
 
                     joinedLobby = null;
-
+                    
                     OnGameStarted?.Invoke(this, EventArgs.Empty);
+                    
+                    SceneController.Instance.GameStarter();
                 }
             }
         }
@@ -192,7 +200,7 @@ public class LobbyManager : MonoBehaviour {
         }
     }
 
-    public async void CreateLobby(string lobbyName, int maxPlayers, bool isPrivate, GameMode gameMode) {
+    public async void CreateLobby(string lobbyName, int maxPlayers, bool isPrivate, GameMode gameMode, GameMap gameMap) {
         Player player = GetPlayer();
 
         CreateLobbyOptions options = new CreateLobbyOptions {
@@ -200,6 +208,7 @@ public class LobbyManager : MonoBehaviour {
             IsPrivate = isPrivate,
             Data = new Dictionary<string, DataObject> {
                 { KEY_GAME_MODE, new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString()) },
+                { KEY_GAME_MAP, new DataObject(DataObject.VisibilityOptions.Public, gameMap.ToString()) },
                 { KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member,"0")}
             }
         };
@@ -376,7 +385,7 @@ public class LobbyManager : MonoBehaviour {
         {
             try
             {
-                SceneManager.LoadScene(1);
+                //SceneManager.LoadScene(1);
 
                 Debug.Log("Start Game");
                 string relayCode = await TestRelay.Instance.CreateRelay();
@@ -388,6 +397,7 @@ public class LobbyManager : MonoBehaviour {
                         {KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member,relayCode)}
                     }
                 });
+                //await Lobbies.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions { IsPrivate = true});
             }
             catch (LobbyServiceException e)
             {

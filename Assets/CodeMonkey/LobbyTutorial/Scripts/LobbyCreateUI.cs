@@ -25,6 +25,7 @@ public class LobbyCreateUI : MonoBehaviour {
     private bool isPrivate;
     private int maxPlayers;
     private LobbyManager.GameMode gameMode;
+    private LobbyManager.GameMap gameMap;
 
     private void Awake() {
         Instance = this;
@@ -34,7 +35,8 @@ public class LobbyCreateUI : MonoBehaviour {
                 lobbyName,
                 maxPlayers,
                 isPrivate,
-                gameMode
+                gameMode,
+                gameMap
             );
             Hide();
         });

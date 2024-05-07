@@ -1,4 +1,7 @@
 using Unity.Netcode;
+using Unity.Services.Authentication;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,7 +18,7 @@ public class BackHome : MonoBehaviour
     void DisconnectGame()
     {
         NetworkManager.Singleton.Shutdown();
-        SceneManager.LoadScene("LobbyTutorial_Done");
+        SceneController.Instance.BackToMainMenu();
     }
 
     private void OnDisable()
